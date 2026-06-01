@@ -1,0 +1,30 @@
+server:
+  host: "127.0.0.1"
+  port: 8080
+  accessToken: "change-me"
+
+database:
+  host: "127.0.0.1"
+  port: 5432
+  user: "source_explorer"
+  password: "source_explorer"
+  database: "source_explorer"
+
+indexer:
+  mode: "continuous"
+  cloneDir: ".source-explorer/repos"
+  defaultPollingIntervalSeconds: 300
+  maxFileBytes: 1048576
+
+repositories:
+  - name: "source-explorer"
+    url: "."
+    defaultBranch: "main"
+    includeBranches: []
+    excludeBranches: []
+    includePaths: []
+    excludePaths:
+      - ".git/"
+      - "node_modules/"
+      - ".stack-work/"
+

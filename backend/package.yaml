@@ -1,0 +1,78 @@
+name: source-explorer
+version: 0.1.0.0
+github: "local/source-explorer-mcp"
+license: BSD-3-Clause
+author: "Source Explorer"
+maintainer: "maintainer@example.com"
+copyright: "2026"
+
+extra-source-files:
+  - README.md
+
+ghc-options:
+  - -Wall
+  - -Wcompat
+  - -Widentities
+  - -Wincomplete-record-updates
+  - -Wincomplete-uni-patterns
+  - -Wmissing-export-lists
+  - -Wpartial-fields
+  - -Wredundant-constraints
+
+default-extensions:
+  - DeriveAnyClass
+  - DeriveGeneric
+  - DerivingStrategies
+  - DuplicateRecordFields
+  - LambdaCase
+  - OverloadedStrings
+  - RecordWildCards
+
+dependencies:
+  - aeson
+  - base >= 4.17 && < 5
+  - bytestring
+  - containers
+  - cryptonite
+  - directory
+  - filepath
+  - http-types
+  - optparse-applicative
+  - postgresql-simple
+  - process
+  - resource-pool
+  - scientific
+  - text
+  - time
+  - transformers
+  - unordered-containers
+  - uuid
+  - vector
+  - wai
+  - wai-cors
+  - warp
+  - yaml
+
+library:
+  source-dirs: src
+
+executables:
+  source-explorer-server:
+    main: Main.hs
+    source-dirs: app/server
+    dependencies:
+      - source-explorer
+
+  source-explorer-indexer:
+    main: Main.hs
+    source-dirs: app/indexer
+    dependencies:
+      - source-explorer
+
+tests:
+  source-explorer-test:
+    main: Spec.hs
+    source-dirs: test
+    dependencies:
+      - hspec
+      - source-explorer

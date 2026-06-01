@@ -1,0 +1,7 @@
+.stack-work/
+dist-newstyle/
+frontend/node_modules/
+frontend/dist/
+.source-explorer/
+*.log
+
