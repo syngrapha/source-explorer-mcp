@@ -5,10 +5,9 @@ module SourceExplorer.Indexer
 
 import Control.Concurrent (threadDelay)
 import Control.Exception (SomeException, try)
-import Control.Monad (forM_, unless, when)
+import Control.Monad (forM_, when)
 import qualified Data.ByteString as BS
 import Data.List (isPrefixOf)
-import Data.Maybe (fromMaybe)
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
@@ -17,8 +16,6 @@ import SourceExplorer.Git
 import SourceExplorer.Hash
 import SourceExplorer.Parser
 import SourceExplorer.Types
-import System.Directory (doesFileExist)
-import System.FilePath (takeDirectory)
 
 runIndexer :: AppConfig -> IO ()
 runIndexer config@AppConfig {..} = do

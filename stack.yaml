@@ -4,4 +4,3 @@ packages:
   - backend
 
 system-ghc: true
-

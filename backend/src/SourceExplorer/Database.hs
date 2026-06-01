@@ -24,18 +24,13 @@ module SourceExplorer.Database
   , listIndexStatus
   ) where
 
-import Control.Exception (SomeException, try)
 import Control.Monad (forM_, void, when)
-import Data.Int (Int64)
 import Data.Maybe (listToMaybe)
 import Data.Pool (Pool, defaultPoolConfig, newPool, withResource)
 import Data.String (fromString)
 import Data.Text (Text)
 import qualified Data.Text as T
-import qualified Data.Text.Encoding as TE
 import Database.PostgreSQL.Simple
-import Database.PostgreSQL.Simple.FromRow
-import Database.PostgreSQL.Simple.ToField
 import SourceExplorer.Parser (ParsedSymbol (..))
 import SourceExplorer.Types
 import System.Directory (doesDirectoryExist, listDirectory)
@@ -325,25 +320,3 @@ listIndexStatus conn repoName limitRows =
     \FROM indexing_jobs j LEFT JOIN repositories r ON r.id = j.repository_id \
     \WHERE (? IS NULL OR r.name = ?) ORDER BY j.started_at DESC LIMIT ?"
     (repoName, repoName, limitRows)
-
-instance FromRow RepositorySummary where
-  fromRow = RepositorySummary <$> field <*> field <*> field <*> field
-
-instance FromRow BranchSummary where
-  fromRow = BranchSummary <$> field <*> field <*> field
-
-instance FromRow CommitSummary where
-  fromRow = CommitSummary <$> field <*> field <*> field <*> field <*> field <*> field
-
-instance FromRow FileSummary where
-  fromRow = FileSummary <$> field <*> field <*> field <*> field <*> field <*> field
-
-instance FromRow FileContent where
-  fromRow = FileContent <$> field <*> field <*> field
-
-instance FromRow SymbolSummary where
-  fromRow = SymbolSummary <$> field <*> field <*> field <*> field <*> field <*> field <*> field <*> field <*> field <*> field <*> field
-
-instance FromRow IndexStatus where
-  fromRow = IndexStatus <$> field <*> field <*> field <*> field <*> field
-

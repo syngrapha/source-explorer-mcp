@@ -12,7 +12,6 @@ import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as LBS
 import Data.Maybe (fromMaybe)
-import Data.Pool (withResource)
 import Data.String (fromString)
 import Data.Text (Text)
 import qualified Data.Text as T
@@ -20,8 +19,7 @@ import qualified Data.Text.Encoding as TE
 import Database.PostgreSQL.Simple (Connection)
 import Network.HTTP.Types
 import Network.Wai
-import qualified Network.Wai.Handler.Warp as Warp
-import Network.Wai.Handler.Warp (runSettings, setHost, setPort, defaultSettings)
+import Network.Wai.Handler.Warp (HostPreference, defaultSettings, runSettings, setHost, setPort)
 import Network.Wai.Middleware.Cors
 import SourceExplorer.Database
 import SourceExplorer.Types
@@ -202,5 +200,5 @@ corsMiddleware =
           , corsMethods = ["GET", "POST", "OPTIONS"]
           }
 
-fromStringHost :: String -> Warp.HostPreference
+fromStringHost :: String -> HostPreference
 fromStringHost = fromString

@@ -17,6 +17,7 @@ services:
       retries: 10
 
   server:
+    image: source-explorer-mcp-backend
     build:
       context: .
       dockerfile: Dockerfile.backend
@@ -32,9 +33,7 @@ services:
         condition: service_healthy
 
   indexer:
-    build:
-      context: .
-      dockerfile: Dockerfile.backend
+    image: source-explorer-mcp-backend
     command: ["source-explorer-indexer", "--config", "/app/config/source-explorer.yaml"]
     environment:
       SOURCE_EXPLORER_CONFIG: /app/config/source-explorer.yaml

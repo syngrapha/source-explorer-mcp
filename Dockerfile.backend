@@ -1,15 +1,19 @@
 FROM haskell:9.6.6 AS build
+ARG DEBIAN_FRONTEND=noninteractive
 WORKDIR /app
 RUN apt-get update \
   && apt-get install -y --no-install-recommends libpq-dev pkg-config \
   && rm -rf /var/lib/apt/lists/*
 COPY stack.yaml .
 COPY backend backend
-RUN stack setup --system-ghc || true
-RUN stack build --only-dependencies
-RUN stack install --local-bin-path /out
+RUN stack build --only-dependencies > /tmp/stack-dependencies.log 2>&1 \
+  || (cat /tmp/stack-dependencies.log && exit 1)
+RUN mkdir -p /out
+ENV PATH="/out:${PATH}"
+RUN stack install --only-locals --local-bin-path /out
 
 FROM debian:bookworm-slim
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
   && apt-get install -y --no-install-recommends ca-certificates git libpq5 \
   && git config --system --add safe.directory '*' \

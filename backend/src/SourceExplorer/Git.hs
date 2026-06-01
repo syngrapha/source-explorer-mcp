@@ -12,7 +12,6 @@ module SourceExplorer.Git
 import Control.Exception (throwIO)
 import Data.Text (Text)
 import qualified Data.Text as T
-import qualified Data.Text.Encoding as TE
 import System.Directory (createDirectoryIfMissing, doesDirectoryExist)
 import System.Exit (ExitCode (..))
 import System.FilePath ((</>))

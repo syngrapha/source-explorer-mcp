@@ -20,6 +20,7 @@ module SourceExplorer.Types
 import Data.Aeson
 import Data.Text (Text)
 import Data.Time (UTCTime)
+import Database.PostgreSQL.Simple.FromRow (FromRow (..), field)
 import GHC.Generics (Generic)
 
 type SymbolKind = Text
@@ -179,3 +180,23 @@ data IndexStatus = IndexStatus
   deriving stock (Show, Eq, Generic)
   deriving anyclass (ToJSON)
 
+instance FromRow RepositorySummary where
+  fromRow = RepositorySummary <$> field <*> field <*> field <*> field
+
+instance FromRow BranchSummary where
+  fromRow = BranchSummary <$> field <*> field <*> field
+
+instance FromRow CommitSummary where
+  fromRow = CommitSummary <$> field <*> field <*> field <*> field <*> field <*> field
+
+instance FromRow FileSummary where
+  fromRow = FileSummary <$> field <*> field <*> field <*> field <*> field <*> field
+
+instance FromRow FileContent where
+  fromRow = FileContent <$> field <*> field <*> field
+
+instance FromRow SymbolSummary where
+  fromRow = SymbolSummary <$> field <*> field <*> field <*> field <*> field <*> field <*> field <*> field <*> field <*> field <*> field
+
+instance FromRow IndexStatus where
+  fromRow = IndexStatus <$> field <*> field <*> field <*> field <*> field
