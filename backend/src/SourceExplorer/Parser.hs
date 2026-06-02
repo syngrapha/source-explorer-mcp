@@ -54,12 +54,12 @@ parseSymbols language content =
 
 parseCSharp :: Int -> Text -> [ParsedSymbol]
 parseCSharp lineNo line =
-  mapMaybe (matchPrefix lineNo line)
-    [ ("class ", "class")
-    , ("interface ", "interface")
-    , ("enum ", "enum")
-    , ("struct ", "type")
-    , ("record ", "type")
+  mapMaybe (matchCSharpType lineNo line)
+    [ ("class", "class")
+    , ("interface", "interface")
+    , ("enum", "enum")
+    , ("struct", "type")
+    , ("record", "type")
     ]
     <> maybeToList (parseCSharpMethod lineNo line)
 
@@ -112,6 +112,27 @@ mkSymbol lineNo original kind leading prefix stripped =
             , symbolSnippet = T.strip original
             }
 
+matchCSharpType :: Int -> Text -> (Text, Text) -> Maybe ParsedSymbol
+matchCSharpType lineNo line (keyword, kind) =
+  let stripped = T.stripStart line
+      leading = T.length line - T.length stripped
+      tokens = T.words stripped
+      remainder = dropWhile isCSharpModifier tokens
+   in case remainder of
+        current : name : _ | current == keyword && isIdentifier name ->
+          let startCol = leading + fromMaybe 0 (T.findIndex (== T.head name) stripped) + 1
+           in Just ParsedSymbol
+                { symbolName = name
+                , symbolKind = kind
+                , symbolContainer = Nothing
+                , symbolStartLine = lineNo
+                , symbolStartColumn = startCol
+                , symbolEndLine = lineNo
+                , symbolEndColumn = startCol + T.length name
+                , symbolSnippet = T.strip line
+                }
+        _ -> Nothing
+
 parseArrowFunction :: Int -> Text -> Maybe ParsedSymbol
 parseArrowFunction lineNo line =
   let stripped = T.stripStart line
@@ -162,6 +183,28 @@ parseCSharpMethod lineNo line =
 
 notAnyPrefix :: [Text] -> Text -> Bool
 notAnyPrefix prefixes value = not (any (`T.isPrefixOf` value) prefixes)
+
+isCSharpModifier :: Text -> Bool
+isCSharpModifier token =
+  token
+    `elem` [ "public"
+           , "private"
+           , "protected"
+           , "internal"
+           , "abstract"
+           , "sealed"
+           , "static"
+           , "partial"
+           , "readonly"
+           , "unsafe"
+           , "new"
+           ]
+
+isIdentifier :: Text -> Bool
+isIdentifier value =
+  not (T.null value)
+    && isIdentStart (T.head value)
+    && T.all isIdentChar value
 
 isIdentStart :: Char -> Bool
 isIdentStart c = c == '_' || c == '$' || c == '@' || c `elem` ['A' .. 'Z'] || c `elem` ['a' .. 'z']
